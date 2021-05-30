@@ -3,9 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>mltg</title>
-        
-        <meta name="robots" content="noindex" />
+        <title>描画 - mltg</title>
         
         
 
@@ -97,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="about.html"><strong aria-hidden="true">1.</strong> mltg</a></li><li class="chapter-item expanded "><a href="hello_world.html"><strong aria-hidden="true">2.</strong> Hello, world!</a></li><li class="chapter-item expanded "><a href="draw.html"><strong aria-hidden="true">3.</strong> 描画</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="about.html"><strong aria-hidden="true">1.</strong> mltg</a></li><li class="chapter-item expanded "><a href="hello_world.html"><strong aria-hidden="true">2.</strong> Hello, world!</a></li><li class="chapter-item expanded "><a href="draw.html" class="active"><strong aria-hidden="true">3.</strong> 描画</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -167,119 +165,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="mltg"><a class="header" href="#mltg">mltg</a></h1>
-<p>Direct2Dをラップしたライブラリです。</p>
-<p>Direct3D11やDirect3D12上でも線や文字を描くことができます。</p>
-<h3 id="a-hrefhttpslnseabgithubiomltgapimltgindexhtmlapiリファレンスa"><a class="header" href="#a-hrefhttpslnseabgithubiomltgapimltgindexhtmlapiリファレンスa"><a href="https://lnseab.github.io/mltg/api/mltg/index.html">APIリファレンス</a></a></h3>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
-<p>mltgの<code>exmples</code>にある<code>hello.rs</code>を例にmltgの使い方を見ていきましょう。
-<code>hello.rs</code>は単純に青い背景にHello, world!と表示するだけのプログラムとなります。</p>
-<p><a href="https://github.com/LNSEAB/mltg/blob/master/mltg/examples/hello.rs">ソースコード</a></p>
-<p><code>hello.rs</code>では以下のクレートを使っています。</p>
-<ul>
-<li><a href="https://crates.io/crates/anyhow">anyhow</a></li>
-<li><a href="https://crates.io/crates/wita">wita</a></li>
-</ul>
-<h2 id="applicationの定義"><a class="header" href="#applicationの定義">Applicationの定義</a></h2>
-<p>描画に必要な変数を<code>Application</code>のフィールドに定義しています。</p>
-<pre><code class="language-rust ignore">struct Application {
-    context: mltg::Context&lt;mltg::Direct2D&gt;,
-    back_buffer: Vec&lt;mltg::d2d::RenderTarget&gt;,
-    white: mltg::Brush,
-    text_layout: mltg::TextLayout,
-}
-</code></pre>
-<p><code>mltg::Context</code>の型引数に<code>mltg::Direct2D</code>、<code>mltg::Direct3D11</code>、<code>mltg::Direct3D12</code>のいずれかを
-指定する必要があります。ここではDirect2Dだけを使うので<code>mltg::Direct2D</code>にしています。
-また、<code>back_buffer</code>は描画先となるので持っておく必要があり、
-<code>white</code>が色を表す<code>mltg::Brush</code>で<code>text_layout</code>が字を描画するための<code>mltg::TextLayout</code>となっています。</p>
-<h2 id="apllicationnew"><a class="header" href="#apllicationnew">Apllication::new</a></h2>
-<p><code>Application::new</code>の中でウィンドウやコンテキストを作っていきます。</p>
-<h3 id="ウィンドウを作る"><a class="header" href="#ウィンドウを作る">ウィンドウを作る</a></h3>
-<p>mltgにはウィンドウを生成する機能はないので他のクレートを利用してください。
-ここでは<code>wita</code>を使います (自分で作ったクレートの宣伝)。</p>
-<pre><code class="language-rust ignore">let window = wita::WindowBuilder::new().title(&quot;mltg hello&quot;).build()?;
-let window_size = window.inner_size();
-</code></pre>
-<p>ウィンドウの生成とウィンドウのクライアント領域のサイズを取得しています。</p>
-<h3 id="バックエンドを作る"><a class="header" href="#バックエンドを作る">バックエンドを作る</a></h3>
-<p><code>mltg::Direct2D</code>を作ります。</p>
-<pre><code class="language-rust ignore">let backend = mltg::Direct2D::new(
-    window.raw_handle(),
-    (window_size.width, window_size.height)
-)?;
-</code></pre>
-<p>ウィンドウのハンドルと<code>mltg::Direct2D</code>の中に作られるバックバッファのサイズを引数として渡すと
-<code>mltg::Direct2D</code>を作ることができます。</p>
-<h3 id="コンテキストとバックバッファを作る"><a class="header" href="#コンテキストとバックバッファを作る">コンテキストとバックバッファを作る</a></h3>
-<p><code>mltg::Context</code>と<code>Vec&lt;mltg::d3d::RenderTarget&gt;</code>を作ります。</p>
-<pre><code class="language-rust ignore">let context = mltg::Context::new(backend)?;
-let back_buffer = context.create_back_buffers(context.backend().swap_chain())?;
-</code></pre>
-<p><code>mltg::Direct2D</code>である<code>backend</code>を渡すだけで<code>mltg::Context</code>を作れます。
-そして今回はバックバッファに直接描画するために<code>context.create_back_buffers</code>を使って
-描画先となるオブジェクトを作ります。<code>mltg::Direct2D</code>の<code>swap_chain</code>を渡す必要があるのですが、
-<code>mltg::Context</code>の中に取り込まれるので<code>mltg::Context</code>の<code>backend</code>で<code>mltg::Direct2D</code>を借用して
-<code>swap_chain</code>を呼び出しています。</p>
-<blockquote>
-<p><code>mltg::Direct3D11</code>や<code>mltg::Direct3D12</code>をバックエンドにした場合は
-バックエンドの中でスワップチェーンを作らないので、ユーザ側でスワップチェーンを作って<code>create_back_buffers</code>に渡してもらうことになります。</p>
-</blockquote>
-<h3 id="ブラシと文字レイアウトを作る"><a class="header" href="#ブラシと文字レイアウトを作る">ブラシと文字レイアウトを作る</a></h3>
-<p><code>mltg::Brush</code>と<code>mltg::TextLayout</code>を作ります。</p>
-<pre><code class="language-rust ignore">let white = context.create_solid_color_brush([1.0, 1.0, 1.0, 1.0])?;
-let text_format = context.create_text_format(
-    &amp;mltg::Font::system(&quot;Yu Gothic UI&quot;),
-    mltg::font_point(28.0),
-    None,
-)?;
-let text_layout = context.create_text_layout(
-    &quot;Hello, world!&quot;,
-    &amp;text_format,
-    mltg::TextAlignment::Leading,
-    None,
-)?;
-</code></pre>
-<p>Direct2DとDirectWriteの関数とほぼ一緒です。
-<code>context.create_text_format</code>の<code>mltg::font_point</code>はフォントのサイズをポイントで指定するための構造体です。
-<code>mltg::font_point</code>を使わず直接<code>f32</code>の値を指定すると論理ピクセル(DIP)でサイズをすることになります。</p>
-<h2 id="イベント"><a class="header" href="#イベント">イベント</a></h2>
-<p><code>Application::new</code>の処理が終わるとウィンドウに描画します。
-そしてウィンドウのサイズが変更された場合は対応することとします。</p>
-<h3 id="描画"><a class="header" href="#描画">描画</a></h3>
-<p><code>Application</code>が実装する<code>wita::EventHandler</code>の<code>draw</code>の中で描画します。</p>
-<pre><code class="language-rust ignore">fn draw(&amp;mut self, _window: &amp;wita::Window) {
-    self.context.draw(&amp;self.back_buffer[0], |cmd| {
-        cmd.clear([0.0, 0.0, 0.3, 0.0]);
-        cmd.draw_text(&amp;self.text_layout, &amp;self.white, (0.0, 0.0));
-    });
-}
-</code></pre>
-<p><code>self.context.draw</code>で描画します。ここで描画先として<code>self.back_buffer</code>を渡します。</p>
-<p>mltgでは<code>BeginDraw</code>と<code>EndDraw</code>で囲む代わりにクロージャの中に処理を書くようにしています。
-クロージャの第1引数は<code>mltg::DrawCommand</code>で描画するためのコマンドをまとめたオブジェクトです。</p>
-<p>ここでは<code>cmd.clear</code>で青い背景になるように塗りつぶして<code>cmd.draw_text</code>で文字列を描画しています。</p>
-<h3 id="ウィンドウのサイズが変更されている場合"><a class="header" href="#ウィンドウのサイズが変更されている場合">ウィンドウのサイズが変更されている場合</a></h3>
-<p><code>Application</code>が実装する<code>wita::EventHandler</code>の<code>resizing</code>の中で描画します。</p>
-<p>ちなみに<code>resizing</code>はウィンドウのサイズ変更中に呼ばれます。</p>
-<pre><code class="language-rust ignore">fn resizing(&amp;mut self, window: &amp;wita::Window, size: wita::PhysicalSize&lt;u32&gt;) {
-    self.back_buffer.clear();
-    self.context.backend().resize((size.width, size.height));
-    self.back_buffer = self
-        .context
-        .create_back_buffers(self.context.backend().swap_chain())
-        .unwrap();
-    window.redraw();
-}
-</code></pre>
-<p>一旦バックバッファに関連付けられた<code>mltg::d2d::RenderTarget</code>を全て破棄して
-バックバッファのサイズを変更して作り直して再描画しています。</p>
-<blockquote>
-<p><code>mltg::Direct3D11</code>と<code>mltg::Direct3D12</code>ではユーザ側でスワップチェーンを作ってもらうことになるため、
-スワップチェーンの<code>ResizeBuffers</code>を呼び出す前に<code>mltg::d3d11::RenderTarget</code>や<code>mltg::d3d12::RenderTarget</code>を
-破棄する必要があります。</p>
-</blockquote>
-<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="描画-1"><a class="header" href="#描画-1">描画</a></h1>
+                        <h1 id="描画"><a class="header" href="#描画">描画</a></h1>
 <p><code>mltg::DrawCommand</code>に描画するための関数があるので紹介していきます。</p>
 <h2 id="stroke----輪郭を描く"><a class="header" href="#stroke----輪郭を描く">stroke -- 輪郭を描く</a></h2>
 <p><code>mltg::DrawCommand::stroke</code>は図形の輪郭を描くための関数です。</p>
@@ -352,6 +238,10 @@ Direct3D側でバックバッファのクリアを行うことをおすすめし
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="hello_world.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
                         
 
@@ -361,6 +251,10 @@ Direct3D側でバックバッファのクリアを行うことをおすすめし
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="hello_world.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
                 
 
                 
@@ -395,14 +289,6 @@ Direct3D側でバックバッファのクリアを行うことをおすすめし
         <!-- Custom JS scripts -->
         
 
-        
-        
-        <script type="text/javascript">
-        window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
-        });
-        </script>
-        
         
 
     </body>

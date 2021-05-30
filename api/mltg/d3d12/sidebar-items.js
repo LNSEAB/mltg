@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Direct3D12",""],["RenderTarget",""]]});

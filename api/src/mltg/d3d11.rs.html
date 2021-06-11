@@ -286,7 +286,7 @@
             <span class="ident">desc</span>
         };
         <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">debug_assertions</span>) {
-            <span class="macro">assert</span><span class="macro">!</span>((<span class="ident">desc</span>.<span class="ident">BindFlags</span> <span class="op">&amp;</span> <span class="ident">D3D11_BIND_RENDER_TARGET</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>);
+            <span class="macro">assert</span><span class="macro">!</span>((<span class="ident">desc</span>.<span class="ident">BindFlags</span> <span class="op">&amp;</span> <span class="ident">D3D11_BIND_RENDER_TARGET</span>) <span class="op">=</span><span class="op">=</span> <span class="ident">D3D11_BIND_RENDER_TARGET</span>);
         }
         <span class="kw">let</span> <span class="ident">surface</span>: <span class="ident">IDXGISurface</span> <span class="op">=</span> <span class="ident">target</span>.<span class="ident">cast</span>()<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">bitmap</span> <span class="op">=</span> <span class="kw">unsafe</span> {

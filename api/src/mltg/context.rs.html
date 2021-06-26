@@ -257,25 +257,12 @@
 <span id="254">254</span>
 <span id="255">255</span>
 <span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">bindings</span>::<span class="ident">Windows</span>::<span class="ident">Win32</span>::<span class="ident">Graphics</span>::{<span class="ident">DirectWrite</span>::<span class="kw-2">*</span>, <span class="ident">Dxgi</span>::<span class="kw-2">*</span>, <span class="ident">Imaging</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">bindings</span>::<span class="ident">Windows</span>::<span class="ident">Foundation</span>::<span class="ident">Numerics</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">bindings</span>::<span class="ident">Windows</span>::<span class="ident">Win32</span>::<span class="ident">Graphics</span>::{<span class="ident">DirectWrite</span>::<span class="kw-2">*</span>, <span class="ident">Dxgi</span>::<span class="kw-2">*</span>, <span class="ident">Imaging</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utility</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">windows</span>::{<span class="ident">Abi</span>, <span class="ident">Interface</span>};
+<span class="kw">use</span> <span class="ident">windows</span>::<span class="ident">Interface</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DrawCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ID2D1DeviceContext</span>);
 
@@ -372,16 +359,10 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">backend</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">windows</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">dwrite_factory</span> <span class="op">=</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="ident">DWriteCreateFactory</span>(
-                    <span class="ident">DWRITE_FACTORY_TYPE_SHARED</span>,
-                    <span class="kw-2">&amp;</span><span class="ident">IDWriteFactory5</span>::<span class="ident">IID</span>,
-                    <span class="ident">p</span>.<span class="ident">set_abi</span>() <span class="kw">as</span> <span class="kw">_</span>,
-                )
-                .<span class="ident">and_some</span>(<span class="ident">p</span>)<span class="question-mark">?</span>
+                <span class="ident">DWriteCreateFactory</span>(<span class="ident">DWRITE_FACTORY_TYPE_SHARED</span>, <span class="kw-2">&amp;</span><span class="ident">IDWriteFactory5</span>::<span class="ident">IID</span>)<span class="question-mark">?</span>.<span class="ident">cast</span>()<span class="question-mark">?</span>
             };
-            <span class="kw">let</span> <span class="ident">wic_imaging_factory</span> <span class="op">=</span> <span class="ident">windows</span>::<span class="ident">create_instance</span>(<span class="kw-2">&amp;</span><span class="ident">CLSID_WICImagingFactory</span>)
-                .<span class="ident">or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">wic_imaging_factory</span> <span class="op">=</span>
+                <span class="ident">windows</span>::<span class="ident">create_instance</span>(<span class="kw-2">&amp;</span><span class="ident">CLSID_WICImagingFactory</span>).<span class="ident">or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
                     <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">code</span>().<span class="number">0</span> <span class="op">!</span><span class="op">=</span> <span class="number">0x800401F0</span> {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>);
                     }
@@ -463,14 +444,7 @@
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PathBuilder</span> {
-        <span class="kw">let</span> <span class="ident">geometry</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-            <span class="self">self</span>.<span class="ident">backend</span>
-                .<span class="ident">d2d1_factory</span>()
-                .<span class="ident">CreatePathGeometry</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">p</span>)
-                .<span class="ident">and_some</span>(<span class="ident">p</span>)
-                .<span class="ident">unwrap</span>()
-        };
+        <span class="kw">let</span> <span class="ident">geometry</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="self">self</span>.<span class="ident">backend</span>.<span class="ident">d2d1_factory</span>().<span class="ident">CreatePathGeometry</span>().<span class="ident">unwrap</span>() };
         <span class="ident">PathBuilder</span>::<span class="ident">new</span>(<span class="ident">geometry</span>)
     }
 

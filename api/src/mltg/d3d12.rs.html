@@ -207,6 +207,7 @@
 <span id="204">204</span>
 <span id="205">205</span>
 <span id="206">206</span>
+<span id="207">207</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::bindings::Windows::Win32::Graphics</span>::{<span class="ident">Direct3D11</span>::<span class="kw-2">*</span>, <span class="ident">Direct3D12</span>::<span class="kw-2">*</span>, <span class="ident">Dxgi</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
@@ -357,10 +358,10 @@
 
     <span class="kw">fn</span> <span class="ident">render_target</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">windows::Interface</span>,
+        <span class="ident">target</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">std::ffi::c_void</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">windows::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::RenderTarget</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">resource</span>: <span class="ident">ID3D12Resource</span> <span class="op">=</span> <span class="ident">target</span>.<span class="ident">cast</span>().<span class="ident">expect</span>(<span class="string">&quot;cannot cast to ID3D12Resource&quot;</span>);
+            <span class="kw">let</span> <span class="ident">resource</span> <span class="op">=</span> <span class="ident">ID3D12Resource::from_abi</span>(<span class="ident">target</span>)<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">desc</span> <span class="op">=</span> <span class="ident">resource</span>.<span class="ident">GetDesc</span>();
             <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">debug_assertions</span>) {
                 <span class="macro">assert!</span>((<span class="ident">desc</span>.<span class="ident">Flags</span>.<span class="number">0</span> <span class="op">&amp;</span> <span class="ident">D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET</span>.<span class="number">0</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>);
@@ -390,6 +391,7 @@
                     },
                 )<span class="question-mark">?</span>
             };
+            <span class="ident">std::mem::forget</span>(<span class="ident">resource</span>);
             <span class="prelude-val">Ok</span>(<span class="ident">RenderTarget</span> { <span class="ident">wrapper</span>, <span class="ident">bitmap</span> })
         }
     }

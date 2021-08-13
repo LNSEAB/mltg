@@ -136,6 +136,13 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::bindings::Windows::Win32::Graphics</span>::{<span class="ident">Direct3D11</span>::<span class="kw-2">*</span>, <span class="ident">Dxgi</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
@@ -164,6 +171,10 @@
     }
 }
 
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">RenderTarget</span> {}
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">RenderTarget</span> {}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Direct3D11</span> {
     <span class="ident">d2d1_factory</span>: <span class="ident">ID2D1Factory1</span>,
     <span class="ident">device_context</span>: <span class="ident">ID2D1DeviceContext</span>,
@@ -197,6 +208,9 @@
         }
     }
 }
+
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Direct3D11</span> {}
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Direct3D11</span> {}
 
 <span class="kw">impl</span> <span class="ident">Backend</span> <span class="kw">for</span> <span class="ident">Direct3D11</span> {
     <span class="kw">type</span> <span class="ident">RenderTarget</span> <span class="op">=</span> <span class="ident">RenderTarget</span>;

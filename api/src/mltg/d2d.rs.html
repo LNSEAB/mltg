@@ -132,6 +132,10 @@
 <span id="130">130</span>
 <span id="131">131</span>
 <span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::bindings::Windows::Win32</span>::{
     <span class="ident">Foundation</span>::<span class="kw-2">*</span>,
@@ -143,6 +147,7 @@
 
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RenderTarget</span> <span class="op">=</span> <span class="ident">d3d11::RenderTarget</span>;
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Direct2D</span> {
     <span class="ident">_d3d11_device</span>: <span class="ident">ID3D11Device</span>,
     <span class="ident">swap_chain</span>: <span class="ident">IDXGISwapChain1</span>,
@@ -218,6 +223,9 @@
         }
     }
 }
+
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Direct2D</span> {}
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Direct2D</span> {}
 
 <span class="kw">impl</span> <span class="ident">Backend</span> <span class="kw">for</span> <span class="ident">Direct2D</span> {
     <span class="kw">type</span> <span class="ident">RenderTarget</span> <span class="op">=</span> <span class="ident">RenderTarget</span>;

@@ -211,9 +211,6 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::bindings::Windows::Win32::Graphics</span>::{<span class="ident">Direct3D11</span>::<span class="kw-2">*</span>, <span class="ident">Direct3D12</span>::<span class="kw-2">*</span>, <span class="ident">Dxgi</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
@@ -285,7 +282,7 @@
             <span class="kw">let</span> <span class="ident">d2d1_factory</span> <span class="op">=</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ID2D1Factory1</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                 <span class="ident">D2D1CreateFactory</span>(
-                    <span class="ident">D2D1_FACTORY_TYPE_SINGLE_THREADED</span>,
+                    <span class="ident">D2D1_FACTORY_TYPE_MULTI_THREADED</span>,
                     <span class="kw-2">&amp;</span><span class="ident">ID2D1Factory1::IID</span>,
                     <span class="ident">std::ptr::null</span>(),
                     <span class="ident">p</span>.<span class="ident">set_abi</span>(),
@@ -369,10 +366,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">render_target</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">target</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">std::ffi::c_void</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">windows::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::RenderTarget</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">render_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">std::ffi::c_void</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">windows::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::RenderTarget</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">resource</span> <span class="op">=</span> <span class="ident">ID3D12Resource::from_abi</span>(<span class="ident">target</span>)<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">desc</span> <span class="op">=</span> <span class="ident">resource</span>.<span class="ident">GetDesc</span>();

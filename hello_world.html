@@ -177,7 +177,7 @@ let window_size = window.inner_size();
 <h3 id="コンテキストとバックバッファを作る"><a class="header" href="#コンテキストとバックバッファを作る">コンテキストとバックバッファを作る</a></h3>
 <p><code>mltg::Context</code>と<code>Vec&lt;mltg::d3d::RenderTarget&gt;</code>を作ります。</p>
 <pre><code class="language-rust ignore">let context = mltg::Context::new(backend)?;
-let back_buffer = context.create_back_buffers(context.backend().swap_chain())?;
+let back_buffer = context.create_back_buffers(context.backend().swap_chain().abi())?;
 </code></pre>
 <p><code>mltg::Direct2D</code>である<code>backend</code>を渡すだけで<code>mltg::Context</code>を作れます。
 そして今回はバックバッファに直接描画するために<code>context.create_back_buffers</code>を使って
@@ -188,18 +188,14 @@ let back_buffer = context.create_back_buffers(context.backend().swap_chain())?;
 <p><code>mltg::Direct3D11</code>や<code>mltg::Direct3D12</code>をバックエンドにした場合は
 バックエンドの中でスワップチェーンを作らないので、ユーザ側でスワップチェーンを作って<code>create_back_buffers</code>に渡してもらうことになります。</p>
 </blockquote>
-<h3 id="ブラシと文字レイアウトを作る"><a class="header" href="#ブラシと文字レイアウトを作る">ブラシと文字レイアウトを作る</a></h3>
-<p><code>mltg::Brush</code>と<code>mltg::TextLayout</code>を作ります。</p>
+<p>異なるwindows-rsのバインディングクレートに対応させるために<code>create_back_buffers</code>や<code>create_render_target</code>はポインタを要求します。
+<code>use windows::Abi;</code>で上記のように<code>abi()</code>でポインタを取得して渡すことができます。</p>
+<h3 id="ブラシと文字フォーマットを作る"><a class="header" href="#ブラシと文字フォーマットを作る">ブラシと文字フォーマットを作る</a></h3>
+<p><code>mltg::Brush</code>と<code>mltg::TextFormat</code>を作ります。</p>
 <pre><code class="language-rust ignore">let white = context.create_solid_color_brush([1.0, 1.0, 1.0, 1.0])?;
 let text_format = context.create_text_format(
     &amp;mltg::Font::system(&quot;Yu Gothic UI&quot;),
     mltg::font_point(28.0),
-    None,
-)?;
-let text_layout = context.create_text_layout(
-    &quot;Hello, world!&quot;,
-    &amp;text_format,
-    mltg::TextAlignment::Leading,
     None,
 )?;
 </code></pre>
@@ -214,7 +210,7 @@ let text_layout = context.create_text_layout(
 <pre><code class="language-rust ignore">fn draw(&amp;mut self, _window: &amp;wita::Window) {
     self.context.draw(&amp;self.back_buffer[0], |cmd| {
         cmd.clear([0.0, 0.0, 0.3, 0.0]);
-        cmd.draw_text(&amp;self.text_layout, &amp;self.white, (0.0, 0.0));
+        cmd.draw_text(&quot;Hello, world!&quot;, &amp;self.text_format, &amp;self.white, (0.0, 0.0));
     });
 }
 </code></pre>

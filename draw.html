@@ -183,9 +183,20 @@
     interpolation: Interpolation
 )
 </code></pre>
-<h2 id="draw_text----文字列"><a class="header" href="#draw_text----文字列">draw_text -- 文字列</a></h2>
-<p><code>mltg::DrawCommand::draw_text</code>は<code>mltg::Context::create_text_layout</code>で作った文字列を描画するための関数です。</p>
+<h2 id="draw_text----文字列の描画"><a class="header" href="#draw_text----文字列の描画">draw_text -- 文字列の描画</a></h2>
+<p><code>mltg::DrawCommand::draw_text</code>は文字列を描画するための関数です。</p>
 <pre><code class="language-rust ignore">pub fn draw_text(
+    &amp;self,
+    text: &amp;str,
+    format: &amp;TextFormat,
+    brush: &amp;Brush,
+    origin: impl Into&lt;Point&gt;
+)
+</code></pre>
+<p><code>mltg::DrawCommand::draw_text</code>は呼び出すたびに内部で<code>mltg::TextLayout</code>を作って描画します。</p>
+<h2 id="draw_text_layout----レイアウト文字列の描画"><a class="header" href="#draw_text_layout----レイアウト文字列の描画">draw_text_layout -- レイアウト文字列の描画</a></h2>
+<p><code>mltg::DrawCommand::draw_text_layout</code>は<code>mltg::Context::create_text_layout</code>で作った文字列を描画するための関数です。</p>
+<pre><code class="language-rust ignore">pub fn draw_text_layout(
     &amp;self,
     layout: &amp;TextLayout,
     brush: &amp;Brush,

@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["mltg"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.54.0/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;DWRITE_TEXT_ALIGNMENT&gt; for <a class=\"enum\" href=\"mltg/enum.TextAlignment.html\" title=\"enum mltg::TextAlignment\">TextAlignment</a>","synthetic":false,"types":["mltg::text::TextAlignment"]}];
+implementors["mltg"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.55.0/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;DWRITE_TEXT_ALIGNMENT&gt; for <a class=\"enum\" href=\"mltg/enum.TextAlignment.html\" title=\"enum mltg::TextAlignment\">TextAlignment</a>","synthetic":false,"types":["mltg::text::TextAlignment"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

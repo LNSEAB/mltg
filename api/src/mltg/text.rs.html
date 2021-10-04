@@ -345,6 +345,10 @@
 <span id="345">345</span>
 <span id="346">346</span>
 <span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::bindings::Windows::Win32</span>::{<span class="ident">Foundation</span>::<span class="kw-2">*</span>, <span class="ident">Graphics::DirectWrite</span>::<span class="kw-2">*</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
@@ -551,6 +555,8 @@
 
 <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">TextFormat</span> {}
 
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">TextFormat</span> {}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TextLayout</span> {
     <span class="ident">layout</span>: <span class="ident">IDWriteTextLayout</span>,
@@ -668,6 +674,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">TextLayout</span> {}
+
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">TextLayout</span> {}
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {

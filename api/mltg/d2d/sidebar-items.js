@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Direct2D",""]],"type":[["RenderTarget",""]]});

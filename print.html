@@ -194,9 +194,7 @@ let back_buffer = context.create_back_buffers()?;
 </code></pre>
 <p><code>mltg::Direct2D</code>である<code>backend</code>を渡すだけで<code>mltg::Context</code>を作れます。
 そして今回はバックバッファに直接描画するために<code>context.create_back_buffers</code>を使って
-描画先となるオブジェクトを作ります。<code>mltg::Direct2D</code>の<code>swap_chain</code>を渡す必要があるのですが、
-<code>mltg::Context</code>の中に取り込まれるので<code>mltg::Context</code>の<code>backend</code>で<code>mltg::Direct2D</code>を借用して
-<code>swap_chain</code>を呼び出しています。</p>
+描画先となるオブジェクトを作ります。</p>
 <blockquote>
 <p><code>mltg::Direct3D11</code>や<code>mltg::Direct3D12</code>をバックエンドにした場合は
 バックエンドの中でスワップチェーンを作らないので、ユーザ側でスワップチェーンを作って<code>create_back_buffers</code>に渡してもらうことになります。</p>
@@ -222,13 +220,18 @@ let text_format = context.create_text_format(
     self.context.draw(&amp;self.back_buffer[0], |cmd| {
         cmd.clear([0.0, 0.0, 0.3, 0.0]);
         cmd.draw_text(&quot;Hello, world!&quot;, &amp;self.text_format, &amp;self.white, (0.0, 0.0));
-    });
+    }).unwrap();
+    self.context.present(None, None);
 }
 </code></pre>
-<p><code>self.context.draw</code>で描画します。ここで描画先として<code>self.back_buffer</code>を渡します。</p>
+<p><code>self.context.draw</code>で描画します。ここで描画先として<code>self.back_buffer</code>を渡します。
+本来<code>self.context.draw</code>の返り値を見てエラー処理をするべきですが、ここでは省略しています。</p>
 <p>mltgでは<code>BeginDraw</code>と<code>EndDraw</code>で囲む代わりにクロージャの中に処理を書くようにしています。
 クロージャの第1引数は<code>mltg::DrawCommand</code>で描画するためのコマンドをまとめたオブジェクトです。</p>
 <p>ここでは<code>cmd.clear</code>で青い背景になるように塗りつぶして<code>cmd.draw_text</code>で文字列を描画しています。</p>
+<p><code>self.context.draw</code>の後、<code>self.context.present</code>を呼び出して画面に表示します。
+<code>self.context.present</code>の引数で<code>IDXGISwapChain1::Present1</code>のようにデューティ領域やスクロールを設定できますが、
+ここではすべて<code>None</code>にしています。</p>
 <h3 id="ウィンドウのサイズが変更されている場合"><a class="header" href="#ウィンドウのサイズが変更されている場合">ウィンドウのサイズが変更されている場合</a></h3>
 <p><code>Application</code>が実装する<code>wita::EventHandler</code>の<code>resizing</code>の中で描画します。</p>
 <p>ちなみに<code>resizing</code>はウィンドウのサイズ変更中に呼ばれます。</p>

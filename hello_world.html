@@ -155,7 +155,7 @@
 <p>描画に必要な変数を<code>Application</code>のフィールドに定義しています。</p>
 <pre><code class="language-rust ignore">struct Application {
     context: mltg::Context&lt;mltg::Direct2D&gt;,
-    back_buffer: Vec&lt;mltg::d2d::RenderTarget&gt;,
+    back_buffer: mltg::d2d::RenderTarget,
     white: mltg::Brush,
     text_layout: mltg::TextLayout,
 }
@@ -175,24 +175,22 @@ let window_size = window.inner_size();
 <p>ウィンドウの生成とウィンドウのクライアント領域のサイズを取得しています。</p>
 <h3 id="バックエンドを作る"><a class="header" href="#バックエンドを作る">バックエンドを作る</a></h3>
 <p><code>mltg::Direct2D</code>を作ります。</p>
-<pre><code class="language-rust ignore">let backend = mltg::Direct2D::new(
+<pre><code class="language-rust ignore">let backend = mltg::Direct2D::new()?;
+</code></pre>
+<h3 id="コンテキストとバックバッファを作る"><a class="header" href="#コンテキストとバックバッファを作る">コンテキストとバックバッファを作る</a></h3>
+<p><code>mltg::Context</code>と<code>mltg::d3d::RenderTarget</code>を作ります。</p>
+<pre><code class="language-rust ignore">let context = mltg::Context::new(backend)?;
+let back_buffer = context.create_render_target(
     window.raw_handle(),
     (window_size.width, window_size.height)
 )?;
 </code></pre>
-<p>ウィンドウのハンドルと<code>mltg::Direct2D</code>の中に作られるバックバッファのサイズを引数として渡すと
-<code>mltg::Direct2D</code>を作ることができます。</p>
-<h3 id="コンテキストとバックバッファを作る"><a class="header" href="#コンテキストとバックバッファを作る">コンテキストとバックバッファを作る</a></h3>
-<p><code>mltg::Context</code>と<code>Vec&lt;mltg::d3d::RenderTarget&gt;</code>を作ります。</p>
-<pre><code class="language-rust ignore">let context = mltg::Context::new(backend)?;
-let back_buffer = context.create_back_buffers()?;
-</code></pre>
-<p><code>mltg::Direct2D</code>である<code>backend</code>を渡すだけで<code>mltg::Context</code>を作れます。
-そして今回はバックバッファに直接描画するために<code>context.create_back_buffers</code>を使って
-描画先となるオブジェクトを作ります。</p>
+<p><code>mltg::Direct2D</code>である<code>backend</code>を渡すだけで<code>mltg::Context</code>を作れます。</p>
+<p>そして今回はバックバッファに直接描画するために<code>context.create_render_target</code>を使います。
+ウィンドウのハンドルと<code>mltg::Direct2D</code>の中に作られるバックバッファのサイズを引数として渡して描画先となるオブジェクトを作ることができます。</p>
 <blockquote>
-<p><code>mltg::Direct3D11</code>や<code>mltg::Direct3D12</code>をバックエンドにした場合は
-バックエンドの中でスワップチェーンを作らないので、ユーザ側でスワップチェーンを作って<code>create_back_buffers</code>に渡してもらうことになります。</p>
+<p><code>mltg::Direct3D11</code>や<code>mltg::Direct3D12</code>をバックエンドにする場合は
+ユーザ側でスワップチェーンを作って<code>create_back_buffers</code>に渡してもらうことになります。</p>
 </blockquote>
 <h3 id="ブラシと文字フォーマットを作る"><a class="header" href="#ブラシと文字フォーマットを作る">ブラシと文字フォーマットを作る</a></h3>
 <p><code>mltg::Brush</code>と<code>mltg::TextFormat</code>を作ります。</p>
